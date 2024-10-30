@@ -1,0 +1,153 @@
+kali㉿kali)-[/etc/ssh]
+└─$ sudo systemctl start ssh
+
+└─$ sudo systemctl enable ssh
+Synchronizing state of ssh.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable ssh
+Created symlink '/etc/systemd/system/sshd.service' → '/usr/lib/systemd/system/ssh.service'.
+Created symlink '/etc/systemd/system/multi-user.target.wants/ssh.service' → '/usr/lib/systemd/system/ssh.service'.
+                                                                                                                         
+┌──(kali㉿kali)-[~]
+└─$ sudo systemctl status ssh
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/usr/lib/systemd/system/ssh.service; enabled; preset: disabled)
+     Active: active (running) since Wed 2024-10-30 08:31:10 EDT; 10min ago
+ Invocation: 2aba24cf96f6488f857298854c044f79
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 2278 (sshd)
+      Tasks: 1 (limit: 2269)
+     Memory: 4.6M (peak: 21.2M)
+        CPU: 222ms
+     CGroup: /system.slice/ssh.service
+             └─2278 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Oct 30 08:31:10 kali systemd[1]: Starting ssh.service - OpenBSD Secure Shell server...
+Oct 30 08:31:10 kali sshd[2278]: Server listening on 0.0.0.0 port 22.
+Oct 30 08:31:10 kali sshd[2278]: Server listening on :: port 22.
+Oct 30 08:31:10 kali systemd[1]: Started ssh.service - OpenBSD Secure Shell server.
+Oct 30 08:36:41 kali sshd[4779]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost>
+Oct 30 08:36:44 kali sshd[4779]: Failed password for kali from ::1 port 39520 ssh2
+Oct 30 08:36:50 kali sshd[4779]: Failed password for kali from ::1 port 39520 ssh2
+Oct 30 08:36:56 kali sshd[4779]: Accepted password for kali from ::1 port 39520 ssh2
+Oct 30 08:36:56 kali sshd[4779]: pam_unix(sshd:session): session opened for user kali(uid=1000) by kali(uid=0)
+Oct 30 08:36:56 kali sshd[4779]: pam_systemd(sshd:session): New sd-bus connection (system-bus-pam-systemd-4779) opened.
+
+(kali㉿kali)-[~]
+└─$ cd /etc/ssh/
+                                                                                                                         
+┌──(kali㉿kali)-[/etc/ssh]
+└─$ ls
+moduli      ssh_config.d  sshd_config.d       ssh_host_ecdsa_key.pub  ssh_host_ed25519_key.pub  ssh_host_rsa_key.pub
+ssh_config  sshd_config   ssh_host_ecdsa_key  ssh_host_ed25519_key    ssh_host_rsa_key
+                                                                                                                         
+┌──(kali㉿kali)-[/etc/ssh]
+└─$ sudo nano sshd_config  
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+
+# This sshd was compiled with PATH=/usr/local/bin:/usr/bin:/bin:/usr/games
+
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options override the
+# default value.
+
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 40
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
+
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
+# Ciphers and keying
+#RekeyLimit default none
+
+# Logging
+#SyslogFacility AUTH
+#LogLevel INFO
+
+# Authentication:
+
+#LoginGraceTime 2m
+PermitRootLogin yes
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+#PubkeyAuthentication yes
+
+# Expect .ssh/authorized_keys2 to be disregarded by default in future.
+#AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
+
+#AuthorizedPrincipalsFile none
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
+
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+#PermitEmptyPasswords no
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+KbdInteractiveAuthentication no
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the KbdInteractiveAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via KbdInteractiveAuthentication may bypass
+# the setting of "PermitRootLogin prohibit-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+
+$ ssh-keygen -t rsa        
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/kali/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/kali/.ssh/id_rsa
+Your public key has been saved in /home/kali/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:ShN0NG4jy0J9Gsi7QtV0XezAWYm7niwfZgBvF8DJREI kali@kali
+The key's randomart image is:
++---[RSA 3072]----+
+|     .E*O+ *o.   |
+|   . * =+o* o    |
+|    = B = .+     |
+|   o o @ ....    |
+|  . o * S ..     |
+| .   + + o.      |
+|  . . .  o+.     |
+|   .    .o+.     |
+|         o.      |
++----[SHA256]-----+
+                      
+kali㉿kali)-[/etc/ssh]
+└─$ ssh user@192.168.56.1 -p 22
+user@192.168.56.1's password: 
+Microsoft Windows [Version 10.0.22631.4317]
+(c) Microsoft Corporation. All rights reserved.
+                                                                
